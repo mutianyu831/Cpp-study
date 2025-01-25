@@ -405,3 +405,122 @@ int main(){
 }
 ```
 
+# 8.6 阶乘之和
+## 题目描述
+用高精度计算出 $S = 1! + 2! + 3! + \cdots + n!$（$n \le 50$）。
+其中 `!` 表示阶乘，定义为 $n!=n\times (n-1)\times (n-2)\times \cdots \times 1$。例如，$5! = 5 \times 4 \times 3 \times 2 \times 1=120$。
+## 输入格式
+一个正整数 $n$。
+## 输出格式
+一个正整数 $S$，表示计算结果。
+## 样例 #1
+### 样例输入 #1
+```
+3
+```
+### 样例输出 #1
+```
+9
+```
+## 提示
+**【数据范围】**
+对于 $100 \%$ 的数据，$1 \le n \le 50$。
+**【其他说明】**
+注，《深入浅出基础篇》中使用本题作为例题，但是其数据范围只有 $n \le 20$，使用书中的代码无法通过本题。
+如果希望通过本题，请继续学习第八章高精度的知识。
+### 标准答案
+```cpp
+#include<iostream>
+#include <cstring> // for memset
+#include <algorithm> // for std::max
+#define maxn 100
+using namespace std;
+
+struct Bigint{
+    int len, a[maxn];
+    Bigint(int x = 0) {
+        memset(a, 0, sizeof(a));
+        for (len = 1; x; len++)
+            a[len] = x % 10, x /= 10;
+        len--;
+    }
+    int& operator[](int i) {
+        return a[i];
+    }
+    void flatten(int L) {
+        len = L;
+        for (int i = 1; i <= len; i++)
+            a[i + 1] += a[i] / 10, a[i] %= 10;
+        for (; !a[len];)
+            len--;
+    }
+    void print() {
+        for (int i = len; i >= 1; i--)
+            printf("%d", a[i]);
+    }
+};
+
+Bigint operator+(Bigint a, Bigint b) {
+    Bigint c;
+    int len = max(a.len, b.len);
+    for (int i = 1; i <= len; i++) {
+        c[i] += a[i] + b[i];
+    }
+    c.flatten(len + 1);
+    return c;
+}
+
+Bigint operator*(Bigint a, int b) {
+    Bigint c;
+    int len = a.len;
+    for (int i = 1; i <= len; i++)
+        c[i] = a[i] * b;
+    c.flatten(len + 11);
+    return c;
+}
+
+int main() {
+    Bigint ans(0), fac(1);
+    int m;
+    cin >> m;
+    for (int i = 1; i <= m; i++) {
+        fac = fac * i;
+        ans =ans+ fac;
+    }
+    ans.print();
+}
+```
+
+### 其他答案
+```cpp
+#include<stdio.h>
+#define MAX 66 //50的阶乘为65位，B存的是每一个数的阶乘
+//一位数+一位数不会超过两位数 如9+9=18，两位数加两位数不会超过3位数。即相加和最大位数取决于加数的最大位数+1
+//所以由此可得，1！+2！位数不会超过2！的位数，依次类推下去。
+//阶乘和的最大位数取决于最大阶乘位数+1 此处即50！ 的位数+1。当然，小数据阶乘和的位数不算多，这样精算其实节省不了什么时间，可尽量将数组开大点。
+int main()
+{
+    int i, A[MAX+1] = { 0 }, B[MAX+1] = { 0 }, n, j;
+    scanf("%d", &n);
+    A[0] = B[0] = 1;//反正都是从1开始，A是用来存阶乘之和，B是用来存每次的i的阶乘 
+    for (i = 2; i <= n; i++) {
+        for (j = 0; j < MAX; j++)
+            B[j] *= i;//利用 n！=n*（n-1）！，B用来存每一次i的阶乘 ,B的每一位都要和i相乘 模拟乘法 
+        for (j = 0; j < MAX; j++)//模拟进位
+            if (B[j] > 9) {
+                B[j + 1] += B[j] / 10;
+                B[j] %= 10;
+            }
+        for (j = 0; j < MAX; j++) {//A来存每次的阶乘相加  高精度加法 
+            A[j] += B[j];
+            if (A[j] > 9) {
+                A[j + 1] += A[j] / 10;
+                A[j] %= 10;
+            }
+        }
+    }
+    for (i = MAX; i >= 0 && A[i] == 0; i--);//去除前导0 
+    for (j = i; j >= 0; j--) printf("%d", A[j]);
+    return 0;
+}
+```
