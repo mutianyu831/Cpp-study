@@ -224,3 +224,35 @@ while (!Q.empty()) {
 ### 数据规模与约定
 对于全部的测试点，保证 $1 \leq x \leq n \leq 400$，$1 \leq y \leq m \leq 400$。
 
+```cpp
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<cstring>
+using namespace std;
+#define maxn 310
+struct coord {
+	int x, y;
+};
+queue<coord>Q;
+int ans[maxn][maxn];
+int walk[8][22] = { {2,1},{1,2},{-1,2},{-2,1},{-2,-1},{-1,-2},{1,-2},{2,-1} };
+int main() {
+	int n, m, sx, sy;
+	memset(ans, -1, sizeof(ans));
+	cin >> n >> m >> sx >>sy;
+	coord tmp = { sx,sy };
+	Q.push(tmp);
+	ans[sx][sy] = 0;
+	while (!Q.empty()) {
+		coord u = Q.front();
+		int ux = u.x, uy = u.y;
+		Q.pop();
+		for (int k = 0; k < 8; k++) {
+			int x = ux + walk[k][0], y = uy + walk[k][1];
+			int d = ans[ux][uy];
+			if()
+		}
+	}
+}
+```
