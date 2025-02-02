@@ -251,8 +251,18 @@ int main() {
 		for (int k = 0; k < 8; k++) {
 			int x = ux + walk[k][0], y = uy + walk[k][1];
 			int d = ans[ux][uy];
-			if()
+			if (x<1 || x>n || y<1 || y>m || ans[x][y] != -1)
+				continue;
+			ans[x][y] = d + 1;
+			coord tmp = { x,y };
+			Q.push(tmp);
 		}
 	}
+
+	for (int i = 1; i <= n; i++, puts(""))
+		for (int j = 1; j <= m; j++)
+			printf("%-5d", ans[i][j]);
+	return 0;
 }
 ```
+
