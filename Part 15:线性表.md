@@ -88,5 +88,31 @@ int main() {
 ```
 
 ```cpp
-
+#include<iostream>
+#include<vector>
+using namespace std;
+int n, q, opt, i, j, k;
+int main() {
+	cin >> n >> q;
+	vector<vector<int>>locker(n + 1);
+	while (q--) {
+		cin >> opt;
+		if (opt == 1) {
+			cin >> i >> j >> k;
+			if (locker[i].size() < j + 1)
+				locker[i].resize(j + 1);
+			locker[i][j] = k;
+		}
+		else {
+			cin >> i >> j;
+			cout << locker[i][j] << endl;
+		}
+	}
+	return 0;
+}
 ```
+
+## 数组复杂度是O(1)，但整段移位操作（在中间插入删除数据）或搜索指定元素（如果没有排序），时间复杂度是O(n)。
+
+# 二、栈
+## 15.3 洗盘子
